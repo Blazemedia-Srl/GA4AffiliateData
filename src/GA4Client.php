@@ -11,7 +11,7 @@ class GA4Client {
 
     private $client;
 
-    function __construct( private string $keyPath, private string $propertyId ) {
+    function __construct( private string $keyPath ) {
 
         $this->client = $this->getClient();
     }
@@ -27,7 +27,7 @@ class GA4Client {
 
         return $this->client->runReport( array_merge( [
             
-            'property' => 'properties/' . $this->propertyId,
+            'property' => 'properties/295858603', // TEST OMNIA GA4
             
             'dateRanges' => [ new DateRange([ 'start_date' => 'yesterday', 'end_date' => 'yesterday' ]) ],
 

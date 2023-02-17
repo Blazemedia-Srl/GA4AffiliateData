@@ -5,22 +5,15 @@ namespace Blazemedia\Ga4AffiliateData;
 use Google\Analytics\Data\V1beta\Metric;
 use Google\Analytics\Data\V1beta\DateRange;
 use Google\Analytics\Data\V1beta\Dimension;
-
-
-/// Service account credentials in JSON format
-/// poi lo mettiamo da env
-//define('KEY_FILE_LOCATION', __DIR__ . '/google_credentials/ga_fetcher_composed-slice-349709-ed3cff527c69.json');
-//define('PROPERTY_ID', '317758145'); // GA4 PROPERTY ID di TELEFONINO.NET
-// define('PROPERTY_ID', '295858603'); // TEST OMNIA GA4
         
 
 final class GA4AffiliateData {
 
     protected $client;
 
-    function __construct( $keyFilePath, $propertyId )  {
+    function __construct( $keyFilePath )  {
     
-        $this->client = new GA4Client( $keyFilePath, $propertyId );
+        $this->client = new GA4Client( $keyFilePath );
     }
 
     
@@ -37,7 +30,13 @@ final class GA4AffiliateData {
     }
 
 
-    public function getViewClickData(  $date = 'yesterday' ) {
+    /**
+     * Get
+     *
+     * @param string $date
+     * @return void
+     */
+    public function getViewClickData(  $date = 'yesterday' , $propertyId = '295858603' ) {
 
         $viewPrimaryDimensions = [
             new Dimension([ 'name' => 'Date' ]),
@@ -63,14 +62,14 @@ final class GA4AffiliateData {
             new Dimension([ 'name' => 'customEvent:data_bmaff_trackingid' ]),            
         ];
 
-        $viewPrimaryRows   = $this->getData( 'bm_views',  $viewPrimaryDimensions,   $date, $date ) ;
-        $viewSecondaryRows = $this->getData( 'bm_views',  $viewSecondaryDimensions, $date, $date ) ;
+        $viewPrimaryRows   = $this->getData( $propertyId, 'bm_views',  $viewPrimaryDimensions,   $date, $date ) ;
+        $viewSecondaryRows = $this->getData( $propertyId, 'bm_views',  $viewSecondaryDimensions, $date, $date ) ;
 
         // var_dump(count($viewPrimaryRows), count($viewSecondaryRows) ); die;
 
         $viewRows = $this->leftJoin( $viewPrimaryRows, $viewSecondaryRows, [ 'Date', 'trackingid' ], [ 'format' => '', 'custom' => '' ] );
         
-        $clickRows = $this->getData( 'bm_clicks', $clickDimensions, $date, $date );
+        $clickRows = $this->getData( $propertyId, 'bm_clicks', $clickDimensions, $date, $date );
 
         return $this->leftJoin( $viewRows, $clickRows, [ 'Date', 'trackingid' ], ['bm_clicks' => 0] );
         
@@ -144,9 +143,11 @@ final class GA4AffiliateData {
      * @param string $end_date
      * @return array
      */
-    public function getData(string $eventName, array $dimensions, $start_date = '2daysAgo', $end_date = 'yesterday') {
+    public function getData(string $propertyId, string $eventName, array $dimensions, $start_date = '2daysAgo', $end_date = 'yesterday') {
 
         $response = $this->client->runReport( [
+
+            'property' => "properties/{$propertyId}",
             
             'dateRanges' => [ new DateRange([ 'start_date' => $start_date, 'end_date' => $end_date ]) ],
 

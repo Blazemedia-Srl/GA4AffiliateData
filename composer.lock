@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "088a479b520fac6e35746566fa830f99",
+    "content-hash": "55d05e6765841ed11df3adc1a3758b17",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -377,7 +377,7 @@
         },
         {
             "name": "google/protobuf",
-            "version": "v3.22.0RC3",
+            "version": "v3.22.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/protocolbuffers/protobuf-php.git",
@@ -415,7 +415,7 @@
                 "proto"
             ],
             "support": {
-                "source": "https://github.com/protocolbuffers/protobuf-php/tree/v3.22.0RC3"
+                "source": "https://github.com/protocolbuffers/protobuf-php/tree/v3.22.0"
             },
             "time": "2023-02-10T20:00:39+00:00"
         },
