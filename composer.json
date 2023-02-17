@@ -1,0 +1,24 @@
+{
+    "name": "blazemedia/ga4-affiliate-data",
+    "description": "Api Client for GA4 that takes affiliate data",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Blazemedia\\Ga4AffiliateData\\": "src/",
+            "Tests\\": "tests/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Andrea Marzilli",
+            "email": "a.marzilli@blazemedia.it"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "google/analytics-data": "*"        
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5"   
+    }
+}
