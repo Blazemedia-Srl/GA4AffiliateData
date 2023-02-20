@@ -34,9 +34,9 @@ final class GA4AffiliateData {
      * Get
      *
      * @param string $date
-     * @return void
+     * @return array
      */
-    public function getViewClickData(  $date = 'yesterday' , $propertyId = '295858603' ) {
+    public function getViewClickData(  $date = 'yesterday' , $propertyId = '295858603' ) : array  {
 
         $viewPrimaryDimensions = [
             new Dimension([ 'name' => 'Date' ]),
