@@ -30,7 +30,7 @@ class GA4AffiliateData extends GA4Client {
      * @param string $propertyId
      * @return array
      */
-    public function getViewClickData(  $date = 'yesterday' , $propertyId = '295858603' ) {
+    public function getViewClickData(  $date = 'yesterday' , $propertyId = '295858603' ) : array {
 
         $viewPrimaryDimensions = [
             new Dimension([ 'name' => 'Date' ]),
