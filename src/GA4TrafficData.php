@@ -6,14 +6,38 @@ use GPBMetadata\Google\Api\Metric;
 use Google\Analytics\Data\V1beta\DateRange;
 use Google\Analytics\Data\V1beta\Dimension;
 
-class GA4TrafficData {
+class GA4TrafficData extends GA4Client {
+
+    protected function getDimensionsMap( $dimensionHeaders ) {
+
+        $dimensions = [];
+
+        foreach ($dimensionHeaders as $idx => $dimensionHeader) {
+
+            $dimensions[ str_replace('customEvent:data_bmaff_', '', $dimensionHeader->getName() ) ] = $idx;    
+        }
+
+        return $dimensions;
+    }
 
 
-    protected $client;
+    /**
+     * Prende i dati di view e click di una property 
+     * per un giorno specifico
+     *
+     * @param string $date
+     * @param string $propertyId
+     * @return array
+     */
+    public function getPageViews( $date = 'yesterday' , $propertyId = '295858603' ) {
 
-    function __construct( $keyFilePath )  {
-    
-        $this->client = new GA4Client( $keyFilePath );
+        $pageViewDimensions = [
+            new Dimension([ 'name' => 'Date' ]),            
+            new Dimension([ 'name' => 'pagePath' ])        
+        ];
+        
+        return $this->getData( $propertyId, 'page_view',  $pageViewDimensions,   $date ) ;
+        
     }
 
 
@@ -75,8 +99,6 @@ class GA4TrafficData {
 
         return $mostViewed;
     }
-
-
 
 
 

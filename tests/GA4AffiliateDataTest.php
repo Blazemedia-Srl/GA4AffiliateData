@@ -6,11 +6,7 @@ use Exception;
 use PHPUnit\Framework\TestCase;
 
 use Blazemedia\Ga4AffiliateData\GA4AffiliateData;
-
-
-use Google\Analytics\Data\V1beta\Metric;
-use Google\Analytics\Data\V1beta\DateRange;
-use Google\Analytics\Data\V1beta\Dimension;
+use Blazemedia\Ga4AffiliateData\GA4TrafficData;
 
 
 
@@ -24,18 +20,30 @@ define('PROPERTY_ID', '295858603'); // TEST OMNIA GA4
 final class GA4AffiliateDataTest extends TestCase {
 
     protected $client;
+    protected $pvclient;
 
     protected function setUp(): void {
 
         parent::setUP();
 
-        $this->client = new GA4AffiliateData( KEY_FILE_LOCATION );
+        $this->client   = new GA4AffiliateData( KEY_FILE_LOCATION );
+        $this->pvclient = new GA4TrafficData( KEY_FILE_LOCATION );
     }
 
     /** @test */
     public function can_get_data() {
 
         $data = $this->client->getViewClickData( '2023-02-15' );
+
+        //var_dump($data);
+
+        $this->assertIsArray( $data );
+    }
+
+    /** @test */
+    public function can_get_page_views() {
+
+        $data = $this->pvclient->getPageViews( '2023-02-15' );
 
         var_dump($data);
 

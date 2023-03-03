@@ -9,9 +9,9 @@ use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
 
 class GA4Client {
 
-    private $client;
+    protected $client;
 
-    function __construct( private string $keyPath ) {
+    function __construct( protected string $keyPath ) {
 
         $this->client = $this->getClient();
     }
@@ -54,4 +54,55 @@ class GA4Client {
             'credentials' => json_decode( $credentials, true )
         ]);
     }
+
+    /**
+     * Ritorna i dati di un certo evento
+     *
+     * @param string $propertyId - stream GA4 da cui estrarre i dati
+     * @param string $eventName  - nome dell'evento
+     * @param array  $dimensions  - campi da estrarre ( array di max 9 string )
+     * @param string $date       - data da considerare
+     * @return array
+     */
+    public function getData( string $propertyId, string $eventName, array $dimensions, $date = 'yesterday' ) {
+
+        /// prende i dati da GA4
+        $response = $this->client->runReport( [
+
+            'property' => "properties/{$propertyId}",
+            
+            'dateRanges' => [ new DateRange([ 'start_date' => $date, 'end_date' => $date ]) ],
+
+            'eventName' => $eventName,
+
+            'metrics'   => [ new Metric([ 'name' => 'eventCount' ]) ],
+            
+            'dimensions' => $dimensions        
+        ]);
+       
+        /// prende i nomi delle colonne ( le ripulisce da customEvent:data_bmaff_ ) e li associa agli indici
+        /// è un elenco di  [ nome_colonna => indice ]
+        $dimensions = $this->getDimensionsMap( $response->getDimensionHeaders() );
+      
+        
+        /// cicla le righe
+        $rows = [];
+        foreach( $response->getRows() as $row ) {
+
+            $rows[] = array_reduce( array_keys( $dimensions ), function( $dataRow, $dimension ) use( $row, $dimensions ) {
+ 
+                /// assengna ogni valore alla dimensione corrispondente
+                $dataRow[ $dimension ] = $row->getDimensionValues()[ $dimensions[ $dimension ] ]->getValue();
+
+                /// e restituisce la riga
+                return $dataRow;
+
+            }, [ $eventName => $row->getMetricValues()[0]->getValue() ] );
+        }
+
+        return $rows;
+    }
+
+
+    
 }
