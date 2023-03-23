@@ -15,7 +15,14 @@ class GA4AffiliateData extends GA4Client {
 
         foreach ($dimensionHeaders as $idx => $dimensionHeader) {
 
-            $dimensions[ str_replace('customEvent:data_bmaff_', '', $dimensionHeader->getName() ) ] = $idx;    
+            $dimensions[ str_replace(
+                [
+                    'customEvent:data_bmaff_trackingid',
+                    'customEvent:data_bmaff_'
+                ],[ 
+                    'tracking_id',
+                    ''
+                ], $dimensionHeader->getName() ) ] = $idx;    
         }
 
         return $dimensions;
@@ -61,13 +68,12 @@ class GA4AffiliateData extends GA4Client {
 
         // var_dump(count($viewPrimaryRows), count($viewSecondaryRows) ); die;
 
-        $viewRows = $this->leftJoin( $viewPrimaryRows, $viewSecondaryRows, [ 'Date', 'trackingid' ], [ 'format' => '', 'custom' => '' ] );
+        $viewRows = $this->leftJoin( $viewPrimaryRows, $viewSecondaryRows, [ 'Date', 'tracking_id' ], [ 'format' => '', 'custom' => '' ] );
         
         $clickRows = $this->getData( $propertyId, 'bm_clicks', $clickDimensions, $date, $date );
 
-        return $this->leftJoin( $viewRows, $clickRows, [ 'Date', 'trackingid' ], ['bm_clicks' => 0] );
+        return $this->leftJoin( $viewRows, $clickRows, [ 'Date', 'tracking_id' ], ['bm_clicks' => 0] );
         
     }
-
-    
+   
 }
