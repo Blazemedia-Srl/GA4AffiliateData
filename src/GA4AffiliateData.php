@@ -3,7 +3,6 @@
 namespace Blazemedia\Ga4AffiliateData;
 
 use Google\Analytics\Data\V1beta\Dimension;
-       
 
 class GA4AffiliateData extends GA4Client {
 
@@ -26,6 +25,19 @@ class GA4AffiliateData extends GA4Client {
         }
 
         return $dimensions;
+    }
+
+    protected function getEventMap( $event ) {
+
+        return str_replace(
+                [
+                    'BM View',
+                    'BM Click'
+                ],[ 
+                    'bm_views',
+                    'bm_clicks'
+                ], 
+                $event);
     }
 
 
@@ -63,15 +75,14 @@ class GA4AffiliateData extends GA4Client {
             new Dimension([ 'name' => 'customEvent:data_bmaff_trackingid' ]),            
         ];
 
-        $viewPrimaryRows   = $this->getData( $propertyId, 'bm_views',  $viewPrimaryDimensions,   $date );
-        $viewSecondaryRows = $this->getData( $propertyId, 'bm_views',  $viewSecondaryDimensions, $date );
+        $viewPrimaryRows   = $this->getData( $propertyId, 'BM View',  $viewPrimaryDimensions,   $date ) ;
+        $viewSecondaryRows = $this->getData( $propertyId, 'BM View',  $viewSecondaryDimensions, $date ) ;
 
         $viewRows = $this->leftJoin( $viewPrimaryRows, $viewSecondaryRows, [ 'Date', 'tracking_id' ], [ 'format' => '', 'custom' => '' ] );
         
-        $clickRows = $this->getData( $propertyId, 'bm_clicks', $clickDimensions, $date, $date );
+        $clickRows = $this->getData( $propertyId, 'BM Click', $clickDimensions, $date, $date );
 
-        return $this->leftJoin( $viewRows, $clickRows, [ 'Date', 'tracking_id' ], ['bm_clicks' => 0] );
-        
+        return $this->leftJoin( $viewRows, $clickRows, [ 'Date', 'tracking_id' ], ['bm_clicks' => 0] );        
     }
-   
+
 }

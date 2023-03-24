@@ -110,7 +110,7 @@ class GA4Client {
                 /// e restituisce la riga
                 return $dataRow;
 
-            }, [ $eventName => $row->getMetricValues()[0]->getValue() ] );
+            }, [ $this->getEventMap( $eventName ) => $row->getMetricValues()[0]->getValue() ] );
         }
 
         return $rows;
@@ -129,5 +129,9 @@ class GA4Client {
         return $dimensions;
     }
 
+    protected function getEventMap( $event ) {
+
+        return str_replace( [],[], $event);
+    }
     
 }
