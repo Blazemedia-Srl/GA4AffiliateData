@@ -43,8 +43,7 @@ class GA4AffiliateData extends GA4Client {
             new Dimension([ 'name' => 'Date' ]),
             new Dimension([ 'name' => 'customEvent:data_bmaff_trackingid' ]),
             new Dimension([ 'name' => 'customEvent:data_bmaff_domain' ]),
-            new Dimension([ 'name' => 'customEvent:data_bmaff_author' ]),
-            new Dimension([ 'name' => 'customEvent:data_bmaff_tipologia' ]),
+            new Dimension([ 'name' => 'customEvent:data_bmaff_author' ]),            
             new Dimension([ 'name' => 'customEvent:data_bmaff_subject' ]),
             new Dimension([ 'name' => 'customEvent:data_bmaff_program' ]),
             new Dimension([ 'name' => 'customEvent:data_bmaff_platform' ]),
@@ -55,7 +54,8 @@ class GA4AffiliateData extends GA4Client {
             new Dimension([ 'name' => 'Date' ]),
             new Dimension([ 'name' => 'customEvent:data_bmaff_trackingid' ]),
             new Dimension([ 'name' => 'customEvent:data_bmaff_format' ]),
-            new Dimension([ 'name' => 'customEvent:data_bmaff_custom' ]),
+            new Dimension([ 'name' => 'customEvent:data_bmaff_tipologia' ]),
+            new Dimension([ 'name' => 'customEvent:data_bmaff_custom' ]),,
         ];
 
         $clickDimensions =  [
