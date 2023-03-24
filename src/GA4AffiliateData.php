@@ -63,10 +63,8 @@ class GA4AffiliateData extends GA4Client {
             new Dimension([ 'name' => 'customEvent:data_bmaff_trackingid' ]),            
         ];
 
-        $viewPrimaryRows   = $this->getData( $propertyId, 'bm_views',  $viewPrimaryDimensions,   $date ) ;
-        $viewSecondaryRows = $this->getData( $propertyId, 'bm_views',  $viewSecondaryDimensions, $date ) ;
-
-        // var_dump(count($viewPrimaryRows), count($viewSecondaryRows) ); die;
+        $viewPrimaryRows   = $this->getData( $propertyId, 'bm_views',  $viewPrimaryDimensions,   $date );
+        $viewSecondaryRows = $this->getData( $propertyId, 'bm_views',  $viewSecondaryDimensions, $date );
 
         $viewRows = $this->leftJoin( $viewPrimaryRows, $viewSecondaryRows, [ 'Date', 'tracking_id' ], [ 'format' => '', 'custom' => '' ] );
         
