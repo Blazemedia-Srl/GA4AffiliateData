@@ -55,7 +55,7 @@ class GA4AffiliateData extends GA4Client {
             new Dimension([ 'name' => 'customEvent:data_bmaff_trackingid' ]),
             new Dimension([ 'name' => 'customEvent:data_bmaff_format' ]),
             new Dimension([ 'name' => 'customEvent:data_bmaff_tipologia' ]),
-            new Dimension([ 'name' => 'customEvent:data_bmaff_custom' ]),,
+            new Dimension([ 'name' => 'customEvent:data_bmaff_custom' ]),
         ];
 
         $clickDimensions =  [
