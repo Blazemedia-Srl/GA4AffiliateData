@@ -2,8 +2,11 @@
 
 namespace Blazemedia\Ga4AffiliateData;
 
+use Google\Analytics\Data\V1beta\Filter;
 use Google\Analytics\Data\V1beta\Metric;
 use Google\Analytics\Data\V1beta\DateRange;
+use Google\Analytics\Data\V1beta\FilterExpression;
+use Google\Analytics\Data\V1beta\Filter\StringFilter;
 use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
 
 
@@ -31,9 +34,14 @@ class GA4Client {
             
             'dateRanges' => [ new DateRange([ 'start_date' => 'yesterday', 'end_date' => 'yesterday' ]) ],
 
-            'eventName' => 'Page View',
             'metrics'   => [ new Metric([ 'name' => 'eventCount' ]) ],
-            
+
+            'dimensionFilter' => new FilterExpression( [
+                'filter' => new Filter([
+                    'field_name'    => 'eventName',
+                    'string_filter' => new StringFilter( [ 'value' => 'Page View'] )
+                ])
+            ]),
 
         ], $args ) );
     }
@@ -73,7 +81,12 @@ class GA4Client {
             
             'dateRanges' => [ new DateRange([ 'start_date' => $date, 'end_date' => $date ]) ],
 
-            'eventName' => $eventName,
+            'dimensionFilter' => new FilterExpression( [
+                'filter' => new Filter([
+                    'field_name'    => 'eventName',
+                    'string_filter' => new StringFilter( [ 'value' => $eventName ] )
+                ])
+            ]),
 
             'metrics'   => [ new Metric([ 'name' => 'eventCount' ]) ],
             
@@ -103,6 +116,18 @@ class GA4Client {
         return $rows;
     }
 
+
+    protected function getDimensionsMap( $dimensionHeaders ) {
+
+        $dimensions = [];
+
+        foreach ($dimensionHeaders as $idx => $dimensionHeader) {
+
+            $dimensions[ $dimensionHeader->getName() ] = $idx;    
+        }
+
+        return $dimensions;
+    }
 
     
 }
