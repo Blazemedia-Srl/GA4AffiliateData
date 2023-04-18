@@ -45,7 +45,7 @@ final class GA4AffiliateDataTest extends TestCase {
 
         $data = $this->pvclient->getPageViews( '2023-02-15' );
 
-        var_dump($data);
+         var_dump($data);
 
         $this->assertIsArray( $data );
     }

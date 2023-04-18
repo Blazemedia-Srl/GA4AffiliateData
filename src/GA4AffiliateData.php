@@ -64,6 +64,7 @@ class GA4AffiliateData extends GA4Client {
 
         $viewSecondaryDimensions = [
             new Dimension([ 'name' => 'Date' ]),
+            new Dimension([ 'name' => 'pagePath' ]),
             new Dimension([ 'name' => 'customEvent:data_bmaff_trackingid' ]),
             new Dimension([ 'name' => 'customEvent:data_bmaff_format' ]),
             new Dimension([ 'name' => 'customEvent:data_bmaff_tipologia' ]),
