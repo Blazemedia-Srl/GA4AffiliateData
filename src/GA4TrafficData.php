@@ -33,7 +33,11 @@ class GA4TrafficData extends GA4Client {
 
         $pageViewDimensions = [
             new Dimension([ 'name' => 'Date' ]),            
-            new Dimension([ 'name' => 'pagePath' ])        
+            new Dimension([ 'name' => 'pagePath' ]),            
+            new Dimension([ 'name' => 'customEvent:data_bmaff_domain' ]),
+            new Dimension([ 'name' => 'customEvent:data_bmaff_author' ]),            
+            new Dimension([ 'name' => 'customEvent:data_bmaff_tipologia' ]),            
+            new Dimension([ 'name' => 'customEvent:data_bmaff_custom' ])
         ];
         
         return $this->getData( $propertyId, 'page_view',  $pageViewDimensions,   $date ) ;
