@@ -14,7 +14,7 @@ class GA4TrafficData extends GA4Client {
 
         foreach ($dimensionHeaders as $idx => $dimensionHeader) {
 
-            $dimensions[ str_replace('customEvent:data_bmaff_', '', $dimensionHeader->getName() ) ] = $idx;    
+            $dimensions[ str_replace('customEvent:bmaff_page_', '', $dimensionHeader->getName() ) ] = $idx;    
         }
 
         return $dimensions;
@@ -29,18 +29,19 @@ class GA4TrafficData extends GA4Client {
      * @param string $propertyId
      * @return array
      */
-    public function getPageViews( $date = 'yesterday' , $propertyId = '295858603' ) {
+    public function getPageViews( $propertyId = '295858603', $date = 'yesterday' ) {
 
         $pageViewDimensions = [
-            new Dimension([ 'name' => 'Date' ]),            
+            new Dimension([ 'name' => 'Date' ]),
             new Dimension([ 'name' => 'pagePath' ]),            
-            new Dimension([ 'name' => 'customEvent:data_bmaff_domain' ]),
-            new Dimension([ 'name' => 'customEvent:data_bmaff_author' ]),            
-            new Dimension([ 'name' => 'customEvent:data_bmaff_tipologia' ]),            
-            new Dimension([ 'name' => 'customEvent:data_bmaff_custom' ])
+            new Dimension([ 'name' => 'customEvent:bmaff_page_domain'    ]),
+            new Dimension([ 'name' => 'customEvent:bmaff_page_author'    ]), 
+            new Dimension([ 'name' => 'customEvent:bmaff_page_alias'     ]),            
+            new Dimension([ 'name' => 'customEvent:bmaff_page_type'      ]),            
+            new Dimension([ 'name' => 'customEvent:bmaff_page_custom'    ])            
         ];
         
-        return $this->getData( $propertyId, 'page_view',  $pageViewDimensions,   $date ) ;
+        return $this->getData( $propertyId,  $date,  $pageViewDimensions, 'page_view' ) ;
         
     }
 
@@ -103,6 +104,19 @@ class GA4TrafficData extends GA4Client {
 
         return $mostViewed;
     }
+
+    // protected function getEventMap( $event ) {
+
+    //     return str_replace(
+    //             [
+    //                 'BM View',
+    //                 'BM Click'
+    //             ],[ 
+    //                 'bm_views',
+    //                 'bm_clicks'
+    //             ], 
+    //             $event);
+    // }
 
 
 

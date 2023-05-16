@@ -28,7 +28,7 @@ class GA4Client {
      */
     public function runReport( array $args ) {
 
-        return $this->client->runReport( array_merge( [
+        $default_args =  [
             
             'property' => 'properties/295858603', // TEST OMNIA GA4
             
@@ -43,7 +43,9 @@ class GA4Client {
                 ])
             ]),
 
-        ], $args ) );
+        ];
+
+        return $this->client->runReport( array_merge( $default_args, $args ) );
     }
 
     
@@ -72,31 +74,35 @@ class GA4Client {
      * @param string $date       - data da considerare
      * @return array
      */
-    public function getData( string $propertyId, string $eventName, array $dimensions, $date = 'yesterday' ) {
+    public function getData( string $propertyId, $date = 'yesterday', array $dimensions = [], string $eventName = '') {
 
-        /// prende i dati da GA4
-        $response = $this->client->runReport( [
+        $params = [
 
             'property' => "properties/{$propertyId}",
             
             'dateRanges' => [ new DateRange([ 'start_date' => $date, 'end_date' => $date ]) ],
 
-            'dimensionFilter' => new FilterExpression( [
+            'metrics'    => [ new Metric([ 'name' => 'eventCount' ]) ],
+            
+            'dimensions' => $dimensions        
+        ];
+            
+        if( $eventName != '' ) {
+
+            $params[ 'dimensionFilter' ] = new FilterExpression( [
                 'filter' => new Filter([
                     'field_name'    => 'eventName',
                     'string_filter' => new StringFilter( [ 'value' => $eventName ] )
                 ])
-            ]),
+            ]);
+        }
 
-            'metrics'   => [ new Metric([ 'name' => 'eventCount' ]) ],
-            
-            'dimensions' => $dimensions        
-        ]);
-       
+        /// prende i dati da GA4
+        $response = $this->client->runReport( $params );
+
         /// prende i nomi delle colonne ( le ripulisce da customEvent:data_bmaff_ ) e li associa agli indici
         /// è un elenco di  [ nome_colonna => indice ]
         $dimensions = $this->getDimensionsMap( $response->getDimensionHeaders() );
-      
         
         /// cicla le righe
         $rows = [];

@@ -49,7 +49,7 @@ class GA4AffiliateData extends GA4Client {
      * @param string $propertyId
      * @return array
      */
-    public function getViewClickData(  $date = 'yesterday' , $propertyId = '295858603' ) : array {
+    public function getViewClickData( $propertyId = '295858603', $date = 'yesterday' ) : array {
 
         $viewPrimaryDimensions = [
             new Dimension([ 'name' => 'Date' ]),
@@ -76,12 +76,12 @@ class GA4AffiliateData extends GA4Client {
             new Dimension([ 'name' => 'customEvent:data_bmaff_trackingid' ]),            
         ];
 
-        $viewPrimaryRows   = $this->getData( $propertyId, 'BM View',  $viewPrimaryDimensions,   $date ) ;
-        $viewSecondaryRows = $this->getData( $propertyId, 'BM View',  $viewSecondaryDimensions, $date ) ;
+        $viewPrimaryRows   = $this->getData( $propertyId, $date, $viewPrimaryDimensions,   'BM View' );
+        $viewSecondaryRows = $this->getData( $propertyId, $date, $viewSecondaryDimensions, 'BM View' );
 
         $viewRows = $this->leftJoin( $viewPrimaryRows, $viewSecondaryRows, [ 'Date', 'tracking_id' ], [ 'format' => '', 'custom' => '' ] );
         
-        $clickRows = $this->getData( $propertyId, 'BM Click', $clickDimensions, $date, $date );
+        $clickRows = $this->getData( $propertyId, $date, $clickDimensions, 'BM Click' );
 
         return $this->leftJoin( $viewRows, $clickRows, [ 'Date', 'tracking_id' ], ['bm_clicks' => 0] );        
     }
