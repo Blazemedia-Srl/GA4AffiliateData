@@ -35,6 +35,7 @@ class GA4TrafficData extends GA4Client {
             new Dimension([ 'name' => 'Date' ]),
             new Dimension([ 'name' => 'pagePath' ]),            
             new Dimension([ 'name' => 'customEvent:bmaff_page_domain'    ]),
+            new Dimension([ 'name' => 'customEvent:bmaff_page_postid'    ]),
             new Dimension([ 'name' => 'customEvent:bmaff_page_author'    ]), 
             new Dimension([ 'name' => 'customEvent:bmaff_page_alias'     ]),            
             new Dimension([ 'name' => 'customEvent:bmaff_page_type'      ]),            

@@ -54,39 +54,40 @@ class GA4AffiliateData extends GA4Client {
         $viewPrimaryDimensions = [
             new Dimension([ 'name' => 'Date' ]),
             new Dimension([ 'name' => 'pagePath' ]), 
+            new Dimension([ 'name' => 'customEvent:data_bmaff_postid' ]),
             new Dimension([ 'name' => 'customEvent:data_bmaff_trackingid' ]),
-            new Dimension([ 'name' => 'customEvent:data_bmaff_domain' ]),           
+            new Dimension([ 'name' => 'customEvent:data_bmaff_domain' ]),
             new Dimension([ 'name' => 'customEvent:data_bmaff_subject' ]),
             new Dimension([ 'name' => 'customEvent:data_bmaff_program' ]),
             new Dimension([ 'name' => 'customEvent:data_bmaff_platform' ]),
-            new Dimension([ 'name' => 'customEvent:data_bmaff_filone' ]),
+            new Dimension([ 'name' => 'customEvent:data_bmaff_filone' ])
         ];
 
         $viewSecondaryDimensions = [
-            new Dimension([ 'name' => 'Date' ]),
-            new Dimension([ 'name' => 'pagePath' ]), 
+            new Dimension([ 'name' => 'Date' ]),            
+            new Dimension([ 'name' => 'customEvent:data_bmaff_postid' ]),
             new Dimension([ 'name' => 'customEvent:data_bmaff_trackingid' ]),
             new Dimension([ 'name' => 'customEvent:data_bmaff_author' ]), 
-            //new Dimension([ 'name' => 'customEvent:data_bmaff_alias' ]), 
+            new Dimension([ 'name' => 'customEvent:data_bmaff_alias' ]), 
             new Dimension([ 'name' => 'customEvent:data_bmaff_format' ]),
             new Dimension([ 'name' => 'customEvent:data_bmaff_tipologia' ]),
             new Dimension([ 'name' => 'customEvent:data_bmaff_custom' ]),
         ];
 
         $clickDimensions =  [
-            new Dimension([ 'name' => 'Date' ]),
-            new Dimension([ 'name' => 'pagePath' ]),
+            new Dimension([ 'name' => 'Date' ]),            
+            new Dimension([ 'name' => 'customEvent:data_bmaff_postid' ]),            
             new Dimension([ 'name' => 'customEvent:data_bmaff_trackingid' ]),            
         ];
 
         $viewPrimaryRows   = $this->getData( $propertyId, $date, $viewPrimaryDimensions,   'BM View' );
         $viewSecondaryRows = $this->getData( $propertyId, $date, $viewSecondaryDimensions, 'BM View' );
 
-        $viewRows = $this->leftJoin( $viewPrimaryRows, $viewSecondaryRows, [ 'Date', 'tracking_id', 'bm_views', 'pagePath' ], [ 'format' => '', 'custom' => '' ] );
+        $viewRows = $this->leftJoin( $viewPrimaryRows, $viewSecondaryRows, [ 'Date', 'tracking_id', 'bm_views', 'postid' ], [ 'format' => '', 'custom' => '' ] );
         
         $clickRows = $this->getData( $propertyId, $date, $clickDimensions, 'BM Click' );
 
-        $blend = $this->leftJoin( $viewRows, $clickRows, [ 'Date', 'tracking_id', 'pagePath' ], ['bm_clicks' => 0] );
+        $blend = $this->leftJoin( $viewRows, $clickRows, [ 'Date', 'tracking_id', 'postid' ], ['bm_clicks' => 0] );
 
         return $blend;
     }
