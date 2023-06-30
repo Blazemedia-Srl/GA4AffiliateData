@@ -8,6 +8,8 @@ use Google\Analytics\Data\V1beta\Dimension;
 
 class GA4TrafficData extends GA4Client {
 
+    use DataJoin;
+
     protected function getDimensionsMap( $dimensionHeaders ) {
 
         $dimensions = [];
@@ -41,9 +43,38 @@ class GA4TrafficData extends GA4Client {
             new Dimension([ 'name' => 'customEvent:bmaff_page_type'      ]),            
             new Dimension([ 'name' => 'customEvent:bmaff_page_custom'    ])            
         ];
+
+        $viewRows = $this->getData( $propertyId,  $date,  $pageViewDimensions, 'page_view' ) ;
+
+        /// questa parte si potrà anche rimuovere una volta stabilizzati i postid
+        $viewRows = $this->checkPostIds( $viewRows );
+
+        return $viewRows;        
+    }
+
+    
+    
+    protected function checkPostIds( $rows ) {
+
+        $filteredRows = $this->indexOn( $rows,  ['Date', 'page_view', 'pagePath' ] );
         
-        return $this->getData( $propertyId,  $date,  $pageViewDimensions, 'page_view' ) ;
-        
+        $indexedRows  = $this->indexOn( $rows,  ['Date', 'page_view', 'pagePath', 'postid' ] );
+
+        foreach( array_keys( $filteredRows ) as $filteredIndex ) {
+
+            foreach( $indexedRows as $index => $row ) {
+
+                if( str_contains( $filteredIndex, $index ) ) {
+
+                    if( !in_array( $row['postid'], [ 0, '', '(not set)' ] ) ) {
+
+                        $filteredRows[ $filteredIndex ] = $row;
+                    };
+                }                
+            }
+        }
+
+        return array_values($filteredRows);
     }
 
 

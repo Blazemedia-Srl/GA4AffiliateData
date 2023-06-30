@@ -23,10 +23,15 @@ final class GA4AffiliateDataTest extends TestCase {
 
     protected $client;
     protected $pvclient;
+    protected $date;
+    protected $property_id;
 
     protected function setUp(): void {
 
         parent::setUP();
+
+        $this->date = '2023-06-29';
+        $this->property_id = '317758145'; // oppure omnia PROPERTY_ID
 
         $this->client   = new GA4AffiliateData( KEY_FILE_LOCATION );
         $this->pvclient = new GA4TrafficData( KEY_FILE_LOCATION );
@@ -35,24 +40,22 @@ final class GA4AffiliateDataTest extends TestCase {
     /** @test */
     public function can_get_data() {
 
-        $date = '2023-05-15';
+        $data =  $this->client->getViewClickData( $this->property_id, $this->date );
 
-        $data =  $this->client->getViewClickData( PROPERTY_ID, '2023-05-15' );
-
-        foreach( $data as $item ) { echo array_keys($item)[0] ." - ". implode(' ', $item)."\n"; }
+       // foreach( $data as $item ) { echo array_keys($item)[0] ." - ". implode(' ', $item)."\n"; }
         // var_dump($data);
 
         $this->assertIsArray( $data );
     }
 
-    /** @_test */
+    /** @test */
     public function can_get_page_views() {
 
-        $date = '2023-05-15';
+        
 
-        $data = $this->pvclient->getPageViews( PROPERTY_ID,  $date );
+        $data = $this->pvclient->getPageViews( $this->property_id,  $this->date );
 
-        echo "\nPageViews del {$date}\n\n";
+        echo "\nPageViews del {$this->date}\n\n";
 
         foreach( $data as $item ) { echo implode(' ', $item)."\n"; }
 

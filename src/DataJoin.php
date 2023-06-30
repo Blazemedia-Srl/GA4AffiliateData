@@ -43,22 +43,12 @@ trait DataJoin {
      * @param array $fields - campi usati per creare l'indice
      * @return array 
      */
-    function indexOn( array $data, array $fields  ) : array {
+    function indexOn( array $data, array $fields ) : array {
 
         return array_reduce( $data, function( $indexedData, $row ) use ( $fields ) {
 
             /// crea l'indice come combinazione dei valori dei campi nella riga
             $index = array_reduce( $fields, fn( $index, $field ) => $index . $row[$field], '' );
-            
-            /// da rimuovere l'if utilizzato solo per i test sui dati, altrimenti da trattare come eccezione
-            /*if( isset( $indexedData[ $index ] ) ) {
-
-                echo "[!] attenzione duplicato {$index}\n" ;
-
-                $indexedData[ $index ] ['bm_views'] += $row['bm_views'];
-
-                return $indexedData;
-            }*/
             
             $indexedData[ $index ] = $row;            
             
