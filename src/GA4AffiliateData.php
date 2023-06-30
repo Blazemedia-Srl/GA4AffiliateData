@@ -70,13 +70,14 @@ class GA4AffiliateData extends GA4Client {
             array_merge( $viewDimensions, [
                 new Dimension([ 'name' => 'customEvent:data_bmaff_domain' ]),
                 new Dimension([ 'name' => 'customEvent:data_bmaff_author' ]), 
-                new Dimension([ 'name' => 'customEvent:data_bmaff_alias' ]), 
-                new Dimension([ 'name' => 'customEvent:data_bmaff_format' ]),                            
-            ]),
-
-            array_merge( $viewDimensions, [
                 new Dimension([ 'name' => 'customEvent:data_bmaff_tipologia' ]),
                 new Dimension([ 'name' => 'customEvent:data_bmaff_custom' ])
+            ]),
+
+            array_merge( $viewDimensions, [                                                
+                new Dimension([ 'name' => 'customEvent:data_bmaff_format' ]),
+                new Dimension([ 'name' => 'customEvent:data_bmaff_alias' ]), 
+                                            
             ])
         ];
 
@@ -87,12 +88,17 @@ class GA4AffiliateData extends GA4Client {
             new Dimension([ 'name' => 'customEvent:data_bmaff_trackingid' ]),            
         ];
 
+        
         $viewRowsPartials = array_map( fn( $dimensions ) => $this->getData( $propertyId, $date, $dimensions, 'BM View'), $viewChunkedDimensions);
 
-        $viewRows = array_reduce( $viewRowsPartials, 
-            fn( $rows, $partial ) => $this->leftJoin( $rows, $partial, [ 'Date', 'tracking_id', 'bm_views', 'postid', 'pagePath' ], [ 'format' => '', 'custom' => '' ] ),
-            array_shift( $viewRowsPartials )
+        $viewRows = array_shift($viewRowsPartials);
+
+        $viewRows = array_reduce( 
+            $viewRowsPartials, 
+            fn( $rows, $partial ) => $this->leftJoin( $rows, $partial, [ 'Date', 'tracking_id', 'bm_views', 'pagePath', 'postid' ], [ 'format' => '', 'custom' => '' ] ),
+            $viewRows 
         );
+
 
         /// questa parte si potrà anche rimuovere una volta stabilizzati i postid
         $viewRows = $this->checkPostIds( $viewRows );

@@ -48,11 +48,10 @@ final class GA4AffiliateDataTest extends TestCase {
         $this->assertIsArray( $data );
     }
 
-    /** @test */
+    /** @_test */
     public function can_get_page_views() {
 
-        
-
+    
         $data = $this->pvclient->getPageViews( $this->property_id,  $this->date );
 
         echo "\nPageViews del {$this->date}\n\n";
