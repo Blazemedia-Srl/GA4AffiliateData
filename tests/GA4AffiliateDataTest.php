@@ -30,7 +30,7 @@ final class GA4AffiliateDataTest extends TestCase {
 
         parent::setUP();
 
-        $this->date = '2023-06-29';
+        $this->date = '2023-10-23';
         $this->property_id = '317758145'; // oppure omnia PROPERTY_ID
 
         $this->client   = new GA4AffiliateData( KEY_FILE_LOCATION );
@@ -42,7 +42,21 @@ final class GA4AffiliateDataTest extends TestCase {
 
         $data =  $this->client->getViewClickData( $this->property_id, $this->date );
 
-       // foreach( $data as $item ) { echo array_keys($item)[0] ." - ". implode(' ', $item)."\n"; }
+        
+
+        $data = array_filter( $data, fn($item) => $item['postid'] == 506599 );
+
+
+
+        $clicks = array_reduce( $data, fn( $sum, $item) => $sum+$item['bm_clicks']);
+
+        var_dump( $data, $clicks ) ; die;
+        
+        
+        foreach( $data as $item ) { 
+            echo array_keys($item)[0] ." - ". implode(' ', $item)."\n"; 
+        }
+
         // var_dump($data);
 
         $this->assertIsArray( $data );

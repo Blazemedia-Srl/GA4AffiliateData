@@ -85,7 +85,8 @@ class GA4AffiliateData extends GA4Client {
         $clickDimensions =  [
             new Dimension([ 'name' => 'Date' ]),            
             new Dimension([ 'name' => 'customEvent:data_bmaff_postid' ]),            
-            new Dimension([ 'name' => 'customEvent:data_bmaff_trackingid' ]),            
+            new Dimension([ 'name' => 'customEvent:data_bmaff_trackingid' ]),        
+            new Dimension([ 'name' => 'pagePath' ])    
         ];
 
         
@@ -105,7 +106,7 @@ class GA4AffiliateData extends GA4Client {
 
         $clickRows = $this->getData( $propertyId, $date, $clickDimensions, 'BM Click' );
 
-        $blend = $this->leftJoin( $viewRows, $clickRows, [ 'Date', 'tracking_id', 'postid' ], ['bm_clicks' => 0] );
+        $blend = $this->leftJoin( $viewRows, $clickRows, [ 'Date', 'tracking_id', 'postid', 'pagePath' ], ['bm_clicks' => 0] );
 
         return $blend;
     }
