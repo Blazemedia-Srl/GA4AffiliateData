@@ -35,13 +35,12 @@ class GA4TrafficData extends GA4Client {
         $pageViewDimensions = [
             new Dimension(['name' => 'Date']),
             new Dimension(['name' => 'customEvent:bmaff_page_postid']),
-            new Dimension(['name' => 'customEvent:bmaff_page_domain']),
+            new Dimension(['name' => 'pagepath']),
         ];
 
         $viewChunkedDimensions = [
 
             array_merge($pageViewDimensions, [
-                new Dimension(['name' => 'pagepath']),
                 new Dimension(['name' => 'customEvent:bmaff_page_alias']),
                 new Dimension(['name' => 'customEvent:bmaff_page_author']),
                 new Dimension(['name' => 'customEvent:bmaff_page_custom']),
@@ -59,42 +58,13 @@ class GA4TrafficData extends GA4Client {
         $viewRowsPartials = array_map(fn ($dimensions) => $this->getData($propertyId, $date, $dimensions, 'page_view'), $viewChunkedDimensions);
 
         $viewRows = array_shift($viewRowsPartials);
-        $viewRows = array_reduce(
-            $viewRowsPartials,
-            fn ($rows, $partial) => $this->leftJoin($rows, $partial, ['Date', 'postid', 'domain'], ['programs' => '', 'subjects' => '', 'type' => '', 'custom' => '']),
-            $viewRows
-        );
 
-        /// questa parte si potrà anche rimuovere una volta stabilizzati i postid
-        $viewRows = $this->checkPostIds($viewRows);
+        $viewRows = $this->leftJoin($viewRows, array_shift($viewRowsPartials), ['Date', 'postid', 'pagepath', 'page_view'], ['programs' => '', 'subjects' => '', 'type' => '']);
 
         return $viewRows;
     }
 
 
-
-    protected function checkPostIds($rows) {
-
-        $filteredRows = $this->indexOn($rows,  ['Date', 'page_view', 'pagepath']);
-
-        $indexedRows  = $this->indexOn($rows,  ['Date', 'page_view', 'pagepath', 'postid']);
-
-        foreach (array_keys($filteredRows) as $filteredIndex) {
-
-            foreach ($indexedRows as $index => $row) {
-
-                if (str_contains($filteredIndex, $index)) {
-
-                    if (!in_array($row['postid'], [0, '', '(not set)'])) {
-
-                        $filteredRows[$filteredIndex] = $row;
-                    };
-                }
-            }
-        }
-
-        return array_values($filteredRows);
-    }
 
 
     /**
