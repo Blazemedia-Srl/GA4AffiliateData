@@ -16,7 +16,8 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "google/analytics-data": "*"        
+        "google/analytics-data": "*",
+        "mongodb/mongodb": "v1.12.x-dev"        
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5"   

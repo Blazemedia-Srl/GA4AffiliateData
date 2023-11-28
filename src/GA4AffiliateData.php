@@ -6,7 +6,7 @@ use Google\Analytics\Data\V1beta\Dimension;
 
 class GA4AffiliateData extends GA4Client {
 
-    use DataJoin;
+    use MongoDataJoin;
     
     protected function getDimensionsMap( $dimensionHeaders ) {
 
