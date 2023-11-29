@@ -19,9 +19,9 @@ define('PROPERTY_ID', '317738872'); // GA4 PROPERTY ID di MELABLOG.IT
 //define('PROPERTY_ID', '295858603'); // TEST OMNIA GA4
         
 
-final class GA4AffiliateDataTest extends TestCase {
-
-    protected $client;    
+final class GA4TrafficDataTest extends TestCase {
+    
+    protected $pvclient;
     protected $date;
     protected $property_id;
 
@@ -32,26 +32,17 @@ final class GA4AffiliateDataTest extends TestCase {
         $this->date = '2023-11-01';
         $this->property_id = '317758145'; // oppure omnia PROPERTY_ID
 
-        $this->client   = new GA4AffiliateData( KEY_FILE_LOCATION );
+        $this->pvclient = new GA4TrafficData( KEY_FILE_LOCATION );
     }
-    
-    public function testGetClickAndViewsData() {
 
-        $data =  $this->client->getViewClickData( $this->property_id, $this->date );
 
-        var_dump( $data ); die;
+    public function _testGetPageViews() {
 
-        $clicks = array_reduce( $data, fn( $sum, $item) => $sum + $item['bm_clicks']);
+        $data = $this->pvclient->getPageViews( $this->property_id,  $this->date );
 
-        var_dump( $clicks ); die;
-        
-        $data = array_filter( $data, fn($item) => $item['postid'] == 506599 );
-        
-        foreach( $data as $item ) { 
-            echo array_keys($item)[0] ." - ". implode(' ', $item)."\n"; 
-        }
+        echo "\nPageViews del {$this->date}\n\n";
 
-        // var_dump($data);
+        foreach( $data as $item ) { echo implode(' ', $item)."\n"; }
 
         $this->assertIsArray( $data );
     }

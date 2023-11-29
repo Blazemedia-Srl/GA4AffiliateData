@@ -84,7 +84,9 @@ class GA4Client {
 
             'metrics'    => [ new Metric([ 'name' => 'eventCount' ]) ],
             
-            'dimensions' => $dimensions        
+            'dimensions' => $dimensions,
+
+            'keepEmptyRows' => true,
         ];
             
         if( $eventName != '' ) {
