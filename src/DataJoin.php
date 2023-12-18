@@ -25,10 +25,9 @@ trait DataJoin {
         $indexedLeft  = $this->indexOn( $left,  $onFields );
         $indexedRight = $this->indexOn( $right, $onFields );
 
-
         return array_map( fn( $index ) => isset( $indexedRight[$index] ) ? 
-                                            array_merge( $indexedLeft[ $index ], $indexedRight[$index] ) : 
-                                            array_merge( $indexedLeft[ $index ], $defaultRight ),
+                                            array_merge( $indexedRight[ $index ], $indexedLeft[$index] ):
+                                            array_merge( $defaultRight, $indexedLeft[ $index ] ),
 
                           array_keys( $indexedLeft )
         );
