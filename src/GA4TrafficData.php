@@ -50,6 +50,7 @@ class GA4TrafficData extends GA4Client {
                 new Dimension(['name' => 'customEvent:bmaff_page_programs']),
                 new Dimension(['name' => 'customEvent:bmaff_page_subjects']),
                 new Dimension(['name' => 'customEvent:bmaff_page_type']),
+                new Dimension(['name' => 'customEvent:bmaff_page_revenuestreams']),
             ]),
 
         ];
@@ -59,7 +60,7 @@ class GA4TrafficData extends GA4Client {
 
         $viewRows = array_shift($viewRowsPartials);
 
-        $viewRows = $this->leftJoin($viewRows, array_shift($viewRowsPartials), ['Date', 'postid', 'pagepath', 'page_view'], ['programs' => '', 'subjects' => '', 'type' => '']);
+        $viewRows = $this->leftJoin($viewRows, array_shift($viewRowsPartials), ['Date', 'postid', 'pagepath', 'page_view'], ['programs' => '', 'subjects' => '', 'type' => '', 'revenuestreams'=>'']);
 
         return $viewRows;
     }
