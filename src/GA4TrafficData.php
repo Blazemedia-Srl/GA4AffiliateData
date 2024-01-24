@@ -60,9 +60,34 @@ class GA4TrafficData extends GA4Client {
 
         $viewRows = array_shift($viewRowsPartials);
 
-        $viewRows = $this->leftJoin($viewRows, array_shift($viewRowsPartials), ['Date', 'postid', 'pagepath', 'page_view'], ['programs' => '', 'subjects' => '', 'type' => '', 'revenuestreams'=>'']);
+        $rightValuesWithoutPostID = [];
+        $rightValuesWithPostID = [];
 
-        return $viewRows;
+        foreach (array_shift($viewRowsPartials) as $rightValues) {
+            if (!array_key_exists('postid', $rightValues)) break;
+            if ($rightValues['postid'] == '(not set)') {
+                $rightValuesWithoutPostID[] = $rightValues;
+            } else {
+                $rightValuesWithPostID[] = $rightValues;
+            }
+        }
+
+        foreach ($viewRows as $leftValues) {
+            if (!array_key_exists('postid', $leftValues)) break;
+            if ($leftValues['postid'] == '(not set)') {
+                $leftValuesWithoutPostID[] = $leftValues;
+            } else {
+                $leftValuesWithPostID[] = $leftValues;
+            }
+        }
+
+        $defaultFields = ['programs' => '', 'subjects' => '', 'type' => '', 'revenuestreams' => '', 'alias' => '', 'author' => '', 'custom' => ''];
+
+
+        $viewRows = $this->leftJoin($leftValuesWithPostID, $rightValuesWithPostID, ['Date', 'postid'], $defaultFields);
+        $viewRowsWithoutPostID = $this->leftJoin($leftValuesWithoutPostID, $rightValuesWithoutPostID, ['Date', 'postid', 'pagepath'], $defaultFields);
+
+        return array_merge($viewRows, $viewRowsWithoutPostID);
     }
 
 
