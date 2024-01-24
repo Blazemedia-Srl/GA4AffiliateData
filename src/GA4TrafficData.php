@@ -62,6 +62,8 @@ class GA4TrafficData extends GA4Client {
 
         $rightValuesWithoutPostID = [];
         $rightValuesWithPostID = [];
+        $leftValuesWithoutPostID = [];
+        $leftValuesWithPostID = [];
 
         foreach (array_shift($viewRowsPartials) as $rightValues) {
             if (!array_key_exists('postid', $rightValues)) break;
