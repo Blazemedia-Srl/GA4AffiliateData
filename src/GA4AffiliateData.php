@@ -2,6 +2,7 @@
 
 namespace Blazemedia\Ga4AffiliateData;
 
+use Blazemedia\Ga4AffiliateData\Utils\DataJoin;
 use Google\Analytics\Data\V1beta\Dimension;
 
 class GA4AffiliateData extends GA4Client {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Blazemedia\Ga4AffiliateData;
+namespace Blazemedia\Ga4AffiliateData\Utils;
 
 
 
