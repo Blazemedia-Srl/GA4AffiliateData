@@ -43,6 +43,8 @@ class GA4Client {
                 ])
             ]),
 
+            'limit' => 100000
+
         ];
 
         return $this->client->runReport( array_merge( $default_args, $args ) );
