@@ -67,11 +67,9 @@ class GA4TrafficData extends AbstractTrafficData
             }
         }
 
-        $defaultFields = ['programs' => '', 'subjects' => '', 'type' => '', 'revenuestreams' => '', 'alias' => '', 'author' => '', 'custom' => ''];
 
-
-        $viewRows = $this->leftJoin($leftValuesWithPostID, $rightValuesWithPostID, ['Date', 'postid'], $defaultFields);
-        $viewRowsWithoutPostID = $this->leftJoin($leftValuesWithoutPostID, $rightValuesWithoutPostID, ['Date', 'postid', 'pagepath'], $defaultFields);
+        $viewRows = $this->leftJoin($leftValuesWithPostID, $rightValuesWithPostID, ['Date', 'postid'], $this->defaultFields);
+        $viewRowsWithoutPostID = $this->leftJoin($leftValuesWithoutPostID, $rightValuesWithoutPostID, ['Date', 'postid', 'pagepath'], $this->defaultFields);
 
         return array_merge($viewRows, $viewRowsWithoutPostID);
     }

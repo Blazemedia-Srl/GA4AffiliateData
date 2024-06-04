@@ -86,7 +86,9 @@ class GA4Client {
 
             'metrics'    => [ new Metric([ 'name' => 'eventCount' ]) ],
             
-            'dimensions' => $dimensions        
+            'dimensions' => $dimensions,
+            
+            'limit' => 100000
         ];
             
         if( $eventName != '' ) {

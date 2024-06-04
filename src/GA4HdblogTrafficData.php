@@ -19,7 +19,6 @@ class GA4HdblogTrafficData extends AbstractTrafficData
     {
         $pageViewDimensions = [
             new Dimension(['name' => 'Date']),
-            new Dimension(['name' => 'customEvent:bmaff_page_postid']),
             new Dimension(['name' => 'pagepath']),
         ];
 
@@ -42,5 +41,8 @@ class GA4HdblogTrafficData extends AbstractTrafficData
 
         $viewRowsPartials = array_map(fn ($dimensions) => $this->getData($propertyId, $date, $dimensions, 'page_view'), $viewChunkedDimensions);
 
+        $viewRows = $this->leftJoin($viewRowsPartials[0], $viewRowsPartials[1], ['Date', 'pagepath'], $this->defaultFields);
+        
+        return $viewRows;
     }
 }

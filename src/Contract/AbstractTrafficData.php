@@ -7,6 +7,8 @@ use Blazemedia\Ga4AffiliateData\Utils\DataJoin;
 
 abstract class AbstractTrafficData extends GA4Client {
 
+    protected array $defaultFields = ['programs' => '', 'subjects' => '', 'type' => '', 'revenuestreams' => '', 'alias' => '', 'author' => '', 'custom' => ''];
+
     use DataJoin;
 
     protected function getDimensionsMap($dimensionHeaders) {
