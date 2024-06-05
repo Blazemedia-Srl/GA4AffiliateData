@@ -41,7 +41,7 @@ class GA4HdblogTrafficData extends AbstractTrafficData
 
         $viewRowsPartials = array_map(fn ($dimensions) => $this->getData($propertyId, $date, $dimensions, 'page_view'), $viewChunkedDimensions);
 
-        $viewRows = $this->leftJoin($viewRowsPartials[0], $viewRowsPartials[1], ['Date', 'pagepath'], $this->defaultFields);
+        $viewRows = $this->leftJoin($viewRowsPartials[0], $viewRowsPartials[1], ['Date', 'pagepath', 'page_view'], $this->defaultFields);
         
         return $viewRows;
     }
