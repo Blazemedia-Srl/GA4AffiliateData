@@ -8,6 +8,7 @@ use Google\Analytics\Data\V1beta\DateRange;
 use Google\Analytics\Data\V1beta\Dimension;
 use Google\Analytics\Data\V1beta\Filter;
 use Google\Analytics\Data\V1beta\Filter\StringFilter;
+use Google\Analytics\Data\V1beta\Filter\StringFilter\MatchType;
 use Google\Analytics\Data\V1beta\FilterExpression;
 use Google\Analytics\Data\V1beta\FilterExpressionList;
 use Google\Analytics\Data\V1beta\Metric;
@@ -38,35 +39,17 @@ class PaidCampaignTrafficData extends GA4Client
      * @param string $propertyId
      * @return array
      */
-    public function getPageViews($propertyId = '295858603', $date = 'yesterday') {
+    public function getPageViews($propertyId = '295858603', $date = 'yesterday', string $path) {
+
         $pageViewDimensions = [
             new Dimension(['name' => 'Date']),
             new Dimension(['name' => 'pagepath']),
+            new Dimension(['name' => 'eventName']),
             new Dimension(['name' => 'sessionDefaultChannelGroup']),
             
         ];
 
-        $viewChunkedDimensions = [
-
-            array_merge($pageViewDimensions, [
-                new Dimension(['name' => 'customEvent:bmaff_page_alias']),
-                new Dimension(['name' => 'customEvent:bmaff_page_author']),
-                new Dimension(['name' => 'customEvent:bmaff_page_custom']),
-            ]),
-
-            array_merge($pageViewDimensions, [
-                new Dimension(['name' => 'customEvent:bmaff_page_programs']),
-                new Dimension(['name' => 'customEvent:bmaff_page_subjects']),
-                new Dimension(['name' => 'customEvent:bmaff_page_type']),
-                new Dimension(['name' => 'customEvent:bmaff_page_revenuestreams']),
-            ]),
-
-        ];
-
-
-        $viewRowsPartials = array_map(fn ($dimensions) => $this->getData($propertyId, $date, $dimensions, 'page_view'), $viewChunkedDimensions);
-
-        $viewRows = $this->leftJoin($viewRowsPartials[0], $viewRowsPartials[1], ['Date', 'pagepath'], $this->defaultFields);
+        $viewRows = $this->getDataCampaign($propertyId, $date, $pageViewDimensions, 'page_view', $path);
 
         return $viewRows;
     }
@@ -80,7 +63,7 @@ class PaidCampaignTrafficData extends GA4Client
      * @param string $date       - data da considerare
      * @return array
      */
-    public function getData( string $propertyId, $date = 'yesterday', array $dimensions = [], string $eventName = '') {
+    public function getDataCampaign( string $propertyId, $date = 'yesterday', array $dimensions = [], string $eventName = '', string $path = '') {
 
         $params = [
 
@@ -100,14 +83,21 @@ class PaidCampaignTrafficData extends GA4Client
                         new FilterExpression([
                             'filter' => new Filter([
                                 'field_name'    => 'eventName',
-                                'string_filter' => new StringFilter( [ 'value' => $eventName, ] )
+                                'string_filter' => new StringFilter( [ 'value' => $eventName, 'match_type' => MatchType::EXACT ] )
                             ])
                         ]),
 
                         new FilterExpression([
                             'filter' => new Filter([
                                 'field_name'    => 'sessionDefaultChannelGroup',
-                                'string_filter' => new StringFilter( [ 'value' => 'paid search' , 'match_type' => 1] )
+                                'string_filter' => new StringFilter( [ 'value' => 'paid search' , 'match_type' =>  MatchType::EXACT ])
+                            ])
+                        ]),
+
+                        new FilterExpression([
+                            'filter' => new Filter([
+                                'field_name'    => 'pagepath',
+                                'string_filter' => new StringFilter( [ 'value' => $path , 'match_type' => MatchType::CONTAINS ])
                             ])
                         ])
                     ]
