@@ -39,7 +39,7 @@ class PaidCampaignTrafficData extends GA4Client
      * @param string $propertyId
      * @return array
      */
-    public function getPageViews($propertyId = '295858603', $date = 'yesterday', string $path) {
+    public function getPageViews($propertyId = '295858603', $date = 'yesterday', string $path = '') {
 
         $pageViewDimensions = [
             new Dimension(['name' => 'Date']),
