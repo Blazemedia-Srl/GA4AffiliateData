@@ -23,11 +23,5 @@ abstract class AbstractTrafficData extends GA4Client
         return $dimensions;
     }
 
-    protected function queryGA4($params)
-    {
-        return $this->client->runReport($params);
-    }
-
-
     abstract public function getPageViews($propertyId = '295858603', $date = 'yesterday');
 }

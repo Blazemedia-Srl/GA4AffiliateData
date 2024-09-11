@@ -51,6 +51,16 @@ class GA4Client
         return $this->client->runReport(array_merge($default_args, $args));
     }
 
+    /**
+     * Make a generic API call.
+     * 
+     * @param array $args
+     */
+    public function runGenericReport(array $args)
+    {
+        return $this->client->runReport($args);
+    }
+
 
     /**
      * Istanzia un client per GA4
