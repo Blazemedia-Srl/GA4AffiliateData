@@ -56,6 +56,7 @@ class GA4Client
     /**
      * Make a generic API call.
      * 
+     * @param string $propertyId
      * @param string $jsonArgs
      * 
      * eg. {
@@ -73,21 +74,22 @@ class GA4Client
      *  }
      * }
      */
-    public function runGenericReport(string $jsonArgs)
+    public function runGenericReport(string $propertyId, string $jsonArgs)
     {
-        $args = $this->jsonParamToGA4($jsonArgs);
+        $args = $this->jsonParamToGA4($propertyId, $jsonArgs);
         return $this->client->runReport($args);
     }
 
     /**
      * Convert json params to GA4 params
      * 
+     * @param string $propertyId
      * @param string $jsonArgs
      * @return array
      * 
      * TODO: Complete the conversion cases
      */
-    private function jsonParamToGA4(string $jsonArgs)
+    private function jsonParamToGA4(string $propertyId, string $jsonArgs)
     {
         /*
         $params = [
@@ -132,11 +134,11 @@ class GA4Client
         */
 
         $parsedArgs = json_decode($jsonArgs, true);
-        $params = [];
+        $params = [
+            'property' => "properties/{$propertyId}",
+        ];
 
-        if (isset($parsedArgs['property'])) {
-            $params['property'] = "properties/{$parsedArgs['property']}";
-        }
+        var_dump($params);
 
         if (isset($parsedArgs['dateRanges'])) {
             foreach ($parsedArgs['dateRanges'] as $dateRange) {
