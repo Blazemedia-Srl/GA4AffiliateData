@@ -164,7 +164,7 @@ class GA4Client
                     $params['dimensionFilter'] = new FilterExpression([
                         'filter' => new Filter([
                             'field_name'    => $parsedArgs['dimensionFilter']['filter']['fieldName'],
-                            'inListFilter' => new InListFilter(['values' => $parsedArgs['dimensionFilter']['filter']['inListFilter']['values']])
+                            'in_list_filter' => new InListFilter(['values' => $parsedArgs['dimensionFilter']['filter']['inListFilter']['values']])
                         ])
                     ]);
                 }
