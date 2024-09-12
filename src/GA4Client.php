@@ -56,7 +56,7 @@ class GA4Client
     /**
      * Make a generic API call.
      * 
-     * @param array $jsonArgs
+     * @param string $jsonArgs
      * 
      * eg. {
      *  "dimensions":[{"name":"pagePath"}],
@@ -73,7 +73,7 @@ class GA4Client
      *  }
      * }
      */
-    public function runGenericReport(array $jsonArgs)
+    public function runGenericReport(string $jsonArgs)
     {
         $args = $this->jsonParamToGA4($jsonArgs);
         return $this->client->runReport($args);
@@ -82,12 +82,12 @@ class GA4Client
     /**
      * Convert json params to GA4 params
      * 
-     * @param array $jsonArgs
+     * @param string $jsonArgs
      * @return array
      * 
      * TODO: Complete the conversion cases
      */
-    private function jsonParamToGA4(array $jsonArgs)
+    private function jsonParamToGA4(string $jsonArgs)
     {
         /*
         $params = [
@@ -131,62 +131,63 @@ class GA4Client
         ];
         */
 
+        $parsedArgs = json_decode($jsonArgs, true);
         $params = [];
 
-        if ($jsonArgs['property']) {
-            $params['property'] = $jsonArgs['property'];
+        if ($parsedArgs['property']) {
+            $params['property'] = $parsedArgs['property'];
         }
 
-        if ($jsonArgs['dateRanges']) {
+        if ($parsedArgs['dateRanges']) {
             $params['dateRanges'] = new DateRange([
-                'start_date' => $jsonArgs['dateRanges']['startDate'],
-                'end_date' => $jsonArgs['dateRanges']['endDate']
+                'start_date' => $parsedArgs['dateRanges']['startDate'],
+                'end_date' => $parsedArgs['dateRanges']['endDate']
             ]);
         }
 
-        if ($jsonArgs['metrics']) {
-            foreach ($jsonArgs['metrics'] as $metric) {
+        if ($parsedArgs['metrics']) {
+            foreach ($parsedArgs['metrics'] as $metric) {
                 $params['metrics'][] = new Metric(['name' => $metric['name']]);
             }
         }
 
-        if ($jsonArgs['dimensions']) {
-            foreach ($jsonArgs['dimensions'] as $dimension) {
+        if ($parsedArgs['dimensions']) {
+            foreach ($parsedArgs['dimensions'] as $dimension) {
                 $params['dimensions'][] = new Dimension(['name' => $dimension['name']]);
             }
         }
 
-        if ($jsonArgs['dimensionFilter']) {
+        if ($parsedArgs['dimensionFilter']) {
 
-            if ($jsonArgs['dimensionFilter']['filter']) {
+            if ($parsedArgs['dimensionFilter']['filter']) {
 
-                if ($jsonArgs['dimensionFilter']['filter']['inListFilter']) {
+                if ($parsedArgs['dimensionFilter']['filter']['inListFilter']) {
                     $params['dimensionFilter'] = new FilterExpression([
                         'filter' => new Filter([
-                            'field_name'    => $jsonArgs['dimensionFilter']['filter']['fieldName'],
-                            'inListFilter' => new InListFilter(['values' => $jsonArgs['dimensionFilter']['filter']['inListFilter']['values']])
+                            'field_name'    => $parsedArgs['dimensionFilter']['filter']['fieldName'],
+                            'inListFilter' => new InListFilter(['values' => $parsedArgs['dimensionFilter']['filter']['inListFilter']['values']])
                         ])
                     ]);
                 }
 
-                if ($jsonArgs['dimensionFilter']['filter']['stringFilter']) {
+                if ($parsedArgs['dimensionFilter']['filter']['stringFilter']) {
                     $params['dimensionFilter'] = new FilterExpression([
                         'filter' => new Filter([
-                            'field_name'    => $jsonArgs['dimensionFilter']['filter']['fieldName'],
-                            'string_filter' => new StringFilter(['value' => $jsonArgs['dimensionFilter']['filter']['value'], 'match_type' => $jsonArgs['dimensionFilter']['filter']['match_type']])
+                            'field_name'    => $parsedArgs['dimensionFilter']['filter']['fieldName'],
+                            'string_filter' => new StringFilter(['value' => $parsedArgs['dimensionFilter']['filter']['value'], 'match_type' => $parsedArgs['dimensionFilter']['filter']['match_type']])
                         ])
                     ]);
                 }
             }
 
-            if ($jsonArgs['dimensionFilter']['and_group']) {
+            if ($parsedArgs['dimensionFilter']['and_group']) {
                 $params['dimensionFilter'] = new FilterExpression([
                     'and_group' => new FilterExpressionList([
                         'expressions' => []
                     ])
                 ]);
 
-                foreach ($jsonArgs['dimensionFilter']['and_group']['expressions'] as $expression) {
+                foreach ($parsedArgs['dimensionFilter']['and_group']['expressions'] as $expression) {
                     $params['dimensionFilter']['and_group']['expressions'][] = new FilterExpression([
                         'filter' => new Filter([
                             'field_name'    => $expression['filter']['fieldName'],
