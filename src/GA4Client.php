@@ -135,7 +135,7 @@ class GA4Client
         $params = [];
 
         if (isset($parsedArgs['property'])) {
-            $params['property'] = $parsedArgs['property'];
+            $params['property'] = "properties/{$parsedArgs['property']}";
         }
 
         if (isset($parsedArgs['dateRanges'])) {
