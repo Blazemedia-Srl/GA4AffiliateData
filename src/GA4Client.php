@@ -2,13 +2,15 @@
 
 namespace Blazemedia\Ga4AffiliateData;
 
+use Google\Analytics\Data\V1beta\Dimension;
 use Google\Analytics\Data\V1beta\Filter;
 use Google\Analytics\Data\V1beta\Metric;
 use Google\Analytics\Data\V1beta\DateRange;
 use Google\Analytics\Data\V1beta\FilterExpression;
 use Google\Analytics\Data\V1beta\Filter\StringFilter;
 use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
-
+use Google\Analytics\Data\V1beta\Filter\InListFilter;
+use Google\Analytics\Data\V1beta\FilterExpressionList;
 
 class GA4Client
 {
@@ -54,11 +56,146 @@ class GA4Client
     /**
      * Make a generic API call.
      * 
-     * @param array $args
+     * @param array $jsonArgs
+     * 
+     * eg. {
+     *  "dimensions":[{"name":"pagePath"}],
+     *  "metrics":[{"name":"screenPageViews"}],
+     *  "dateRanges":[{"startDate":"yesterday","endDate":"today"}],
+     *  "dimensionFilter":{
+     *       "filter":{
+     *           "fieldName":"pagePath",
+     *           "inListFilter":{
+     *               "values":
+     *                   ["/post-id-1","/post-id-2","/post-id-3","/post-id-4","/post-id-5","/post-id-6","/post-id-7"]
+     *           }
+     *      }
+     *  }
+     * }
      */
-    public function runGenericReport(array $args)
+    public function runGenericReport(array $jsonArgs)
     {
+        $args = $this->jsonParamToGA4($jsonArgs);
         return $this->client->runReport($args);
+    }
+
+    /**
+     * Convert json params to GA4 params
+     * 
+     * @param array $jsonArgs
+     * @return array
+     * 
+     * TODO: Complete the conversion cases
+     */
+    private function jsonParamToGA4(array $jsonArgs)
+    {
+        /*
+        $params = [
+
+            'property' => "properties/{$propertyId}",
+            
+            'dateRanges' => [ new DateRange([ 'start_date' => $date, 'end_date' => $date ]) ],
+
+            'metrics'    => [ new Metric([ 'name' => 'eventCount' ]) ],
+            
+            'dimensions' => $dimensions,
+            
+            'limit' => 100000,
+
+            'dimensionFilter' => new FilterExpression([
+                'and_group' => new FilterExpressionList([
+                    'expressions' => [
+                        new FilterExpression([
+                            'filter' => new Filter([
+                                'field_name'    => 'eventName',
+                                'string_filter' => new StringFilter( [ 'value' => $eventName, 'match_type' => MatchType::EXACT ] )
+                            ])
+                        ]),
+
+                        new FilterExpression([
+                            'filter' => new Filter([
+                                'field_name'    => 'sessionDefaultChannelGroup',
+                                'string_filter' => new StringFilter( [ 'value' => 'paid search' , 'match_type' =>  MatchType::EXACT ])
+                            ])
+                        ]),
+
+                        new FilterExpression([
+                            'filter' => new Filter([
+                                'field_name'    => 'pagepath',
+                                'string_filter' => new StringFilter( [ 'value' => $path , 'match_type' => MatchType::CONTAINS ])
+                            ])
+                        ])
+                    ]
+                ])
+            ])
+        ];
+        */
+
+        $params = [];
+
+        if ($jsonArgs['property']) {
+            $params['property'] = $jsonArgs['property'];
+        }
+
+        if ($jsonArgs['dateRanges']) {
+            $params['dateRanges'] = new DateRange([
+                'start_date' => $jsonArgs['dateRanges']['startDate'],
+                'end_date' => $jsonArgs['dateRanges']['endDate']
+            ]);
+        }
+
+        if ($jsonArgs['metrics']) {
+            foreach ($jsonArgs['metrics'] as $metric) {
+                $params['metrics'][] = new Metric(['name' => $metric['name']]);
+            }
+        }
+
+        if ($jsonArgs['dimensions']) {
+            foreach ($jsonArgs['dimensions'] as $dimension) {
+                $params['dimensions'][] = new Dimension(['name' => $dimension['name']]);
+            }
+        }
+
+        if ($jsonArgs['dimensionFilter']) {
+
+            if ($jsonArgs['dimensionFilter']['filter']) {
+
+                if ($jsonArgs['dimensionFilter']['filter']['inListFilter']) {
+                    $params['dimensionFilter'] = new FilterExpression([
+                        'filter' => new Filter([
+                            'field_name'    => $jsonArgs['dimensionFilter']['filter']['fieldName'],
+                            'inListFilter' => new InListFilter(['values' => $jsonArgs['dimensionFilter']['filter']['inListFilter']['values']])
+                        ])
+                    ]);
+                }
+
+                if ($jsonArgs['dimensionFilter']['filter']['stringFilter']) {
+                    $params['dimensionFilter'] = new FilterExpression([
+                        'filter' => new Filter([
+                            'field_name'    => $jsonArgs['dimensionFilter']['filter']['fieldName'],
+                            'string_filter' => new StringFilter(['value' => $jsonArgs['dimensionFilter']['filter']['value'], 'match_type' => $jsonArgs['dimensionFilter']['filter']['match_type']])
+                        ])
+                    ]);
+                }
+            }
+
+            if ($jsonArgs['dimensionFilter']['and_group']) {
+                $params['dimensionFilter'] = new FilterExpression([
+                    'and_group' => new FilterExpressionList([
+                        'expressions' => []
+                    ])
+                ]);
+
+                foreach ($jsonArgs['dimensionFilter']['and_group']['expressions'] as $expression) {
+                    $params['dimensionFilter']['and_group']['expressions'][] = new FilterExpression([
+                        'filter' => new Filter([
+                            'field_name'    => $expression['filter']['fieldName'],
+                            'string_filter' => new StringFilter(['value' => $expression['filter']['value'], 'match_type' => $expression['filter']['match_type']])
+                        ])
+                    ]);
+                }
+            }
+        }
     }
 
 
