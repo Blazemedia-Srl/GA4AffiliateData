@@ -196,6 +196,8 @@ class GA4Client
                 }
             }
         }
+
+        return $params;
     }
 
 
