@@ -78,8 +78,6 @@ class GA4Client
     {
         $reportParams = $this->jsonParamToGA4($propertyId, $jsonArgs);
 
-        var_dump($reportParams);
-
         return $this->client->runReport($reportParams);
     }
 
@@ -137,8 +135,6 @@ class GA4Client
         */
 
         $parsedArgs = json_decode($jsonArgs, true);
-
-        var_dump($parsedArgs);
 
         $params = [
             'property' => "properties/{$propertyId}",
