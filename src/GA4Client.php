@@ -138,8 +138,6 @@ class GA4Client
             'property' => "properties/{$propertyId}",
         ];
 
-        var_dump($params);
-
         if (isset($parsedArgs['dateRanges'])) {
             foreach ($parsedArgs['dateRanges'] as $dateRange) {
                 $params['dateRanges'][] = new DateRange(['start_date' => $dateRange['startDate'], 'end_date' => $dateRange['endDate']]);
