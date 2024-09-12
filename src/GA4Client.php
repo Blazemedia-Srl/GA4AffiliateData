@@ -139,10 +139,9 @@ class GA4Client
         }
 
         if ($parsedArgs['dateRanges']) {
-            $params['dateRanges'] = new DateRange([
-                'start_date' => $parsedArgs['dateRanges']['startDate'],
-                'end_date' => $parsedArgs['dateRanges']['endDate']
-            ]);
+            foreach ($parsedArgs['dateRanges'] as $dateRange) {
+                $params['dateRanges'][] = new DateRange(['start_date' => $dateRange['startDate'], 'end_date' => $dateRange['endDate']]);
+            }
         }
 
         if ($parsedArgs['metrics']) {
