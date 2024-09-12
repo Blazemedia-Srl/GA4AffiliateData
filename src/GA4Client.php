@@ -134,33 +134,33 @@ class GA4Client
         $parsedArgs = json_decode($jsonArgs, true);
         $params = [];
 
-        if ($parsedArgs['property']) {
+        if (isset($parsedArgs['property'])) {
             $params['property'] = $parsedArgs['property'];
         }
 
-        if ($parsedArgs['dateRanges']) {
+        if (isset($parsedArgs['dateRanges'])) {
             foreach ($parsedArgs['dateRanges'] as $dateRange) {
                 $params['dateRanges'][] = new DateRange(['start_date' => $dateRange['startDate'], 'end_date' => $dateRange['endDate']]);
             }
         }
 
-        if ($parsedArgs['metrics']) {
+        if (isset($parsedArgs['metrics'])) {
             foreach ($parsedArgs['metrics'] as $metric) {
                 $params['metrics'][] = new Metric(['name' => $metric['name']]);
             }
         }
 
-        if ($parsedArgs['dimensions']) {
+        if (isset($parsedArgs['dimensions'])) {
             foreach ($parsedArgs['dimensions'] as $dimension) {
                 $params['dimensions'][] = new Dimension(['name' => $dimension['name']]);
             }
         }
 
-        if ($parsedArgs['dimensionFilter']) {
+        if (isset($parsedArgs['dimensionFilter'])) {
 
-            if ($parsedArgs['dimensionFilter']['filter']) {
+            if (isset($parsedArgs['dimensionFilter']['filter'])) {
 
-                if ($parsedArgs['dimensionFilter']['filter']['inListFilter']) {
+                if (isset($parsedArgs['dimensionFilter']['filter']['inListFilter'])) {
                     $params['dimensionFilter'] = new FilterExpression([
                         'filter' => new Filter([
                             'field_name'    => $parsedArgs['dimensionFilter']['filter']['fieldName'],
@@ -169,7 +169,7 @@ class GA4Client
                     ]);
                 }
 
-                if ($parsedArgs['dimensionFilter']['filter']['stringFilter']) {
+                if (isset($parsedArgs['dimensionFilter']['filter']['stringFilter'])) {
                     $params['dimensionFilter'] = new FilterExpression([
                         'filter' => new Filter([
                             'field_name'    => $parsedArgs['dimensionFilter']['filter']['fieldName'],
@@ -179,7 +179,7 @@ class GA4Client
                 }
             }
 
-            if ($parsedArgs['dimensionFilter']['and_group']) {
+            if (isset($parsedArgs['dimensionFilter']['and_group'])) {
                 $params['dimensionFilter'] = new FilterExpression([
                     'and_group' => new FilterExpressionList([
                         'expressions' => []
