@@ -74,11 +74,13 @@ class GA4Client
      *  }
      * }
      */
-    public function runGenericReport(string $propertyId, string $jsonArgs)
+    public function runGenericReport(string $propertyId, string $jsonArgs, bool $returnAsArray = true)
     {
         $reportParams = $this->jsonParamToGA4($propertyId, $jsonArgs);
 
-        return $this->client->runReport($reportParams);
+        $report = $this->client->runReport($reportParams);
+
+        return $returnAsArray ? json_decode($report->serializeToJsonString(), true) : $report;
     }
 
     /**
