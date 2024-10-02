@@ -201,6 +201,10 @@ class GA4Client
             }
         }
 
+        if (isset($parsedArgs['limit'])) {
+            $params['limit'] = $parsedArgs['limit'];
+        }
+
         return $params;
     }
 
